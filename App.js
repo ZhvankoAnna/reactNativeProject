@@ -2,10 +2,7 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
-
-const image = {
-  uri: "https://thumbs.dreamstime.com/b/fond-de-coeur-d-amour-d-arc-en-ciel-60045149.jpg",
-};
+import bgImage from './assets/bgImage.png'
 
 export default function App() {
   const [fontLoaded] = useFonts({
@@ -18,10 +15,10 @@ export default function App() {
   }
 
   return (
-    <ImageBackground source={image} style={styles.img}>
+    <ImageBackground source={bgImage} style={styles.img}>
       <View style={styles.container}>
-        {/* <RegistrationScreen /> */}
-        <LoginScreen />
+        <RegistrationScreen />
+        {/* <LoginScreen /> */}
       </View>
     </ImageBackground>
   );
