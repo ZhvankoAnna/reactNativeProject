@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   btn: {
-    width: "100%",
+    minWidth: "100%",
     height: 51,
     marginTop: 27,
     paddingVertical: 16,
