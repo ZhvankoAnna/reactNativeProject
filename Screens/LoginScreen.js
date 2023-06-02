@@ -1,39 +1,66 @@
 import {
   StyleSheet,
   Text,
-  TextInput,
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import { useState } from "react";
+import bgImage from "../assets/bgImage.png";
+import FormInput from "../Components/FormInput";
+import SubmitButton from "../Components/SubmitButton";
 
 export default function LoginScreen() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.box}>
-        <Text style={styles.title}>Увійти</Text>
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-          />
-          <TextInput style={styles.input} placeholder="Пароль" />
-          <TouchableOpacity style={styles.hideBtn}>
-            <Text style={styles.hideText}>Показати</Text>
-          </TouchableOpacity>
+    <ImageBackground source={bgImage} style={styles.img}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <View style={styles.box}>
+            <Text style={styles.title}>Увійти</Text>
+            <View>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
+                <FormInput
+                  style={styles.input}
+                  placeholder="Адреса електронної пошти"
+                  onChange={setEmail}
+                  value={email}
+                />
+              </KeyboardAvoidingView>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+              >
+                <FormInput
+                  style={styles.input}
+                  placeholder="Пароль"
+                  onChange={setPassword}
+                  value={password}
+                />
+              </KeyboardAvoidingView>
+            </View>
+            <SubmitButton title="Увійти" />
+            <Text style={styles.link}>Немає акаунту? Зареєструватися</Text>
+          </View>
         </View>
-        <TouchableOpacity style={styles.btn}>
-          <Text style={styles.btnText}>Увійти</Text>
-        </TouchableOpacity>
-        <Text style={styles.link}>Немає акаунту? Зареєструватися</Text>
-      </View>
-    </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "column-reverse",
+    fontFamily: "rb-reg",
+    fontSize: 16,
+  },
   box: {
     width: "100%",
     backgroundColor: "#fff",
@@ -42,6 +69,10 @@ const styles = StyleSheet.create({
     paddingBottom: 144,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+  },
+  img: {
+    width: "100%",
+    height: "100%",
   },
   title: {
     fontFamily: "rb-med",
