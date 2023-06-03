@@ -39,6 +39,7 @@ export default function LoginScreen() {
                   placeholder="Пароль"
                   onChange={setPassword}
                   value={password}
+                  secureTextEntry={true}
                 />
                 <TouchableOpacity style={styles.hideBtn}>
                   <Text style={styles.hideText}>Показати</Text>

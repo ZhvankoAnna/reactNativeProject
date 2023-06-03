@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 
-export default function FormInput({ placeholder = "", value, onChange }) {
+export default function FormInput({ placeholder = "", value, onChange, secureTextEntry = false }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -20,6 +20,7 @@ export default function FormInput({ placeholder = "", value, onChange }) {
       style={[styles.input, isFocused ? styles.inputFocused : null]}
       onFocus={handleFocus}
       onBlur={handleBlur}
+      secureTextEntry={secureTextEntry}
     />
   );
 }
