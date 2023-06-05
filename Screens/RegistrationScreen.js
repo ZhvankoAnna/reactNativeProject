@@ -19,6 +19,17 @@ export default function RegistrationScreen() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hidePassword, setHidePassword] = useState(true)
+
+  const handleSubmit = () => {
+    console.log('login:', login);
+    console.log('email:', email);
+    console.log('password:', password);
+  }
+
+  const handleShowPassword = () => {
+    setHidePassword(prev => !prev);
+  }
 
   return (
     <ImageBackground source={bgImage} style={styles.img}>
@@ -57,13 +68,13 @@ export default function RegistrationScreen() {
                     placeholder="Пароль"
                     onChange={setPassword}
                     value={password}
-                    secureTextEntry={true}
+                    secureTextEntry={hidePassword}
                   />
-                  <TouchableOpacity style={styles.hideBtn}>
-                    <Text style={styles.hideText}>Показати</Text>
+                  <TouchableOpacity style={styles.hideBtn} onPress={handleShowPassword} >
+                    <Text style={styles.hideText}>{hidePassword ? 'Показати' : 'Приховати'}</Text>
                   </TouchableOpacity>
                 </View>
-                <SubmitButton title="Зареєстуватися" />
+                <SubmitButton title="Зареєстуватися" onSubmit={handleSubmit}/>
               </KeyboardAvoidingView>
             </View>
             <Text style={styles.link}>Вже є акаунт? Увійти</Text>

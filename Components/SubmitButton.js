@@ -1,8 +1,8 @@
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-export default function SubmitButton({ title }) {
+export default function SubmitButton({ title, onSubmit }) {
   return (
-    <TouchableOpacity style={styles.btn}>
+    <TouchableOpacity style={styles.btn} onPress={onSubmit}>
       <Text style={styles.btnText}>{title}</Text>
     </TouchableOpacity>
   );

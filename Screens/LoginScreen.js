@@ -16,6 +16,16 @@ import SubmitButton from "../Components/SubmitButton";
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [hidePassword, setHidePassword] = useState(true);
+
+  const handleSubmit = () => {
+    console.log("email:", email);
+    console.log("password:", password);
+  };
+
+  const handleShowPassword = () => {
+    setHidePassword(prev => !prev);
+  }
 
   return (
     <ImageBackground source={bgImage} style={styles.img}>
@@ -34,18 +44,18 @@ export default function LoginScreen() {
                   value={email}
                 />
                 <View>
-                <FormInput
-                  style={styles.input}
-                  placeholder="Пароль"
-                  onChange={setPassword}
-                  value={password}
-                  secureTextEntry={true}
-                />
-                <TouchableOpacity style={styles.hideBtn}>
-                  <Text style={styles.hideText}>Показати</Text>
-                </TouchableOpacity>
+                  <FormInput
+                    style={styles.input}
+                    placeholder="Пароль"
+                    onChange={setPassword}
+                    value={password}
+                    secureTextEntry={hidePassword}
+                  />
+                  <TouchableOpacity style={styles.hideBtn} onPress={handleShowPassword}>
+                    <Text style={styles.hideText}>{hidePassword ? 'Показати' : 'Приховати'}</Text>
+                  </TouchableOpacity>
                 </View>
-                <SubmitButton title="Увійти" />
+                <SubmitButton title="Увійти" onSubmit={handleSubmit} />
               </KeyboardAvoidingView>
             </View>
             <Text style={styles.link}>Немає акаунту? Зареєструватися</Text>
