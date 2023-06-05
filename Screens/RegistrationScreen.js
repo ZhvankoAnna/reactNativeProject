@@ -58,7 +58,7 @@ export default function RegistrationScreen() {
               {!image ? (
                 <TextInput style={styles.photoInput} editable={false} />
               ) : (
-                <Image source={{ uri: image }} style={styles.img} />
+                <Image source={{ uri: image }} style={styles.photo} />
               )}
               <TouchableOpacity onPress={pickImage}>
                 <Ionicons
@@ -150,6 +150,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -39,
     right: -12,
+  },
+  photo: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
   },
   title: {
     fontFamily: "rb-med",
