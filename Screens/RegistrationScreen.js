@@ -8,8 +8,10 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import { useState } from "react";
+import * as ImagePicker from 'expo-image-picker';
 import bgImage from "../assets/bgImage.png";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FormInput from "../Components/FormInput";
@@ -19,17 +21,33 @@ export default function RegistrationScreen() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hidePassword, setHidePassword] = useState(true)
+  const [hidePassword, setHidePassword] = useState(true);
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleSubmit = () => {
-    console.log('login:', login);
-    console.log('email:', email);
-    console.log('password:', password);
-  }
+    console.log("login:", login);
+    console.log("email:", email);
+    console.log("password:", password);
+  };
 
   const handleShowPassword = () => {
-    setHidePassword(prev => !prev);
-  }
+    setHidePassword((prev) => !prev);
+  };
 
   return (
     <ImageBackground source={bgImage} style={styles.img}>
@@ -37,13 +55,19 @@ export default function RegistrationScreen() {
         <View style={styles.container}>
           <View style={styles.box}>
             <View style={styles.wrapper}>
-              <TextInput style={styles.photoInput} />
-              <Ionicons
-                name="add-circle-outline"
-                size={25}
-                color="#FF6C00"
-                style={styles.icon}
-              />
+              {!image ? (
+                <TextInput style={styles.photoInput} editable={false} />
+              ) : (
+                <Image source={{ uri: image }} style={styles.img} />
+              )}
+              <TouchableOpacity onPress={pickImage}>
+                <Ionicons
+                  name="add-circle-outline"
+                  size={25}
+                  color="#FF6C00"
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
             </View>
             <Text style={styles.title}>Реєстрація</Text>
             <View>
@@ -70,11 +94,16 @@ export default function RegistrationScreen() {
                     value={password}
                     secureTextEntry={hidePassword}
                   />
-                  <TouchableOpacity style={styles.hideBtn} onPress={handleShowPassword} >
-                    <Text style={styles.hideText}>{hidePassword ? 'Показати' : 'Приховати'}</Text>
+                  <TouchableOpacity
+                    style={styles.hideBtn}
+                    onPress={handleShowPassword}
+                  >
+                    <Text style={styles.hideText}>
+                      {hidePassword ? "Показати" : "Приховати"}
+                    </Text>
                   </TouchableOpacity>
                 </View>
-                <SubmitButton title="Зареєстуватися" onSubmit={handleSubmit}/>
+                <SubmitButton title="Зареєстуватися" onSubmit={handleSubmit} />
               </KeyboardAvoidingView>
             </View>
             <Text style={styles.link}>Вже є акаунт? Увійти</Text>
@@ -119,7 +148,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute",
-    top: 81,
+    top: -39,
     right: -12,
   },
   title: {
