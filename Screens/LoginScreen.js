@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import bgImage from "../assets/bgImage.png";
 import FormInput from "../Components/FormInput";
 import SubmitButton from "../Components/SubmitButton";
@@ -18,14 +19,22 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
 
+  const navigation = useNavigation();
+
   const handleSubmit = () => {
     console.log("email:", email);
     console.log("password:", password);
+    navigation.navigate("Home",
+    {
+      screen: "PostsScreen",
+      params: { email },
+    }
+    );
   };
 
   const handleShowPassword = () => {
-    setHidePassword(prev => !prev);
-  }
+    setHidePassword((prev) => !prev);
+  };
 
   return (
     <ImageBackground source={bgImage} style={styles.img}>
@@ -51,14 +60,26 @@ export default function LoginScreen() {
                     value={password}
                     secureTextEntry={hidePassword}
                   />
-                  <TouchableOpacity style={styles.hideBtn} onPress={handleShowPassword}>
-                    <Text style={styles.hideText}>{hidePassword ? 'Показати' : 'Приховати'}</Text>
+                  <TouchableOpacity
+                    style={styles.hideBtn}
+                    onPress={handleShowPassword}
+                  >
+                    <Text style={styles.hideText}>
+                      {hidePassword ? "Показати" : "Приховати"}
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <SubmitButton title="Увійти" onSubmit={handleSubmit} />
               </KeyboardAvoidingView>
             </View>
-            <Text style={styles.link}>Немає акаунту? Зареєструватися</Text>
+            <View style={styles.inner}>
+              <Text style={styles.link}>Немає акаунту? </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Registration")}
+              >
+                <Text style={styles.link}>Зареєструватися</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -102,6 +123,10 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontFamily: "rb-reg",
     fontSize: 16,
+  },
+  inner: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
   link: {
     marginTop: 16,

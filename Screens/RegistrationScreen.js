@@ -11,7 +11,8 @@ import {
   Image,
 } from "react-native";
 import { useState } from "react";
-import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 import bgImage from "../assets/bgImage.png";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FormInput from "../Components/FormInput";
@@ -23,6 +24,8 @@ export default function RegistrationScreen() {
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
   const [image, setImage] = useState(null);
+
+  const navigation = useNavigation();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,6 +46,7 @@ export default function RegistrationScreen() {
     console.log("login:", login);
     console.log("email:", email);
     console.log("password:", password);
+    navigation.navigate("Home");
   };
 
   const handleShowPassword = () => {
@@ -60,12 +64,12 @@ export default function RegistrationScreen() {
               ) : (
                 <Image source={{ uri: image }} style={styles.photo} />
               )}
-              <TouchableOpacity onPress={pickImage}>
+              <TouchableOpacity onPress={pickImage} style={styles.icon}>
                 <Ionicons
                   name="add-circle-outline"
                   size={25}
-                  color="#FF6C00"
-                  style={styles.icon}
+                  color={image ? "#E8E8E8" : "#FF6C00"}
+                  style={image && styles.removeIcon}
                 />
               </TouchableOpacity>
             </View>
@@ -106,7 +110,12 @@ export default function RegistrationScreen() {
                 <SubmitButton title="Зареєстуватися" onSubmit={handleSubmit} />
               </KeyboardAvoidingView>
             </View>
-            <Text style={styles.link}>Вже є акаунт? Увійти</Text>
+            <View style={styles.inner}>
+              <Text style={styles.link}>Вже є акаунт? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text style={styles.link}>Увійти</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -148,8 +157,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute",
-    top: -39,
+    top: 76,
     right: -12,
+  },
+  removeIcon: {
+    transform: [{ rotate: "45deg" }],
   },
   photo: {
     width: 120,
@@ -171,6 +183,10 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     fontFamily: "rb-reg",
     fontSize: 16,
+  },
+  inner: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
   link: {
     marginTop: 16,
