@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color }) => {
           if (route.name === "PostsScreen") {
             return <Ionicons name="grid-outline" size={24} color={color} />;
           } else if (route.name === "CreatePostsScreen") {
@@ -19,6 +19,21 @@ export default function Home() {
           } else if (route.name === "ProfileScreen") {
             return <Feather name="user" size={24} color={color} />;
           }
+        },
+        tabBarStyle: {
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: 83,
+          paddingTop: 9,
+        },
+        tabBarItemStyle: {
+          maxWidth: 70,
+          height: 40,
+          paddingHorizontal: 23,
+          paddingVertical: 8,
+          marginHorizontal: 8,
+          borderRadius: 20,
         },
       })}
       tabBarOptions={{
