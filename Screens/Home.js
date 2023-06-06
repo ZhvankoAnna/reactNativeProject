@@ -8,7 +8,6 @@ import { Feather } from "@expo/vector-icons";
 const Tabs = createBottomTabNavigator();
 
 export default function Home() {
-
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
