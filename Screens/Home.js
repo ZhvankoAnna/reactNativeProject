@@ -5,6 +5,8 @@ import ProfileScreen from "./ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+import MapScreen from "./MapScreen";
+
 const Tabs = createBottomTabNavigator();
 
 export default function Home() {
@@ -81,6 +83,13 @@ export default function Home() {
           headerShown: false,
         }}
       />
+      {/* <Tabs.Screen
+        name="MapScreen"
+        component={MapScreen}
+        options={{
+          headerShown: false,
+        }}
+      /> */}
     </Tabs.Navigator>
   );
 }

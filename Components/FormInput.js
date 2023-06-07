@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 
-export default function FormInput({ placeholder = "", value, onChange, secureTextEntry = false }) {
+export default function FormInput({
+  placeholder = "",
+  value,
+  onChange,
+  secureTextEntry = false,
+  auth = true,
+  location = false,
+}) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -17,7 +24,7 @@ export default function FormInput({ placeholder = "", value, onChange, secureTex
       placeholder={placeholder}
       value={value}
       onChangeText={onChange}
-      style={[styles.input, isFocused ? styles.inputFocused : null]}
+      style={[styles.input, isFocused ? styles.inputFocused : null, auth ? styles.authInput : styles.publicInput, location && styles.location]}
       onFocus={handleFocus}
       onBlur={handleBlur}
       secureTextEntry={secureTextEntry}
@@ -27,19 +34,30 @@ export default function FormInput({ placeholder = "", value, onChange, secureTex
 
 const styles = StyleSheet.create({
   input: {
-    minWidth: 343,
+    minWidth: "100%",
     height: 50,
+    marginBottom: 16,
+    paddingVertical: 16,
+    fontFamily: "rb-reg",
+    fontSize: 16,
+  },
+  authInput: {
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     borderStyle: "solid",
     borderWidth: 1,
     borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    fontFamily: "rb-reg",
-    fontSize: 16,
+    paddingHorizontal: 16,
+  },
+  publicInput: {
+    borderBottomColor: '#e8e8e8',
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+  },
+  location: {
+    paddingLeft: 28,
   },
   inputFocused: {
-    borderColor: '#FF6C00'
-  }
+    borderColor: "#FF6C00",
+  },
 });
