@@ -5,7 +5,7 @@ import ProfileScreen from "./ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-import MapScreen from "./MapScreen";
+// import MapScreen from "./MapScreen";
 
 const Tabs = createBottomTabNavigator();
 
@@ -54,6 +54,9 @@ export default function Home() {
             fontFamily: "rb-med",
           },
           headerTitleAlign: "center",
+          headerStyle: {
+            borderBottomWidth: 1,
+          },
           headerRight: () => (
             <Feather
               name="log-out"
@@ -74,6 +77,9 @@ export default function Home() {
             fontFamily: "rb-med",
           },
           headerTitleAlign: "center",
+          headerStyle: {
+            borderBottomWidth: 1,
+          },
         }}
       />
       <Tabs.Screen

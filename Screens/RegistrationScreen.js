@@ -35,8 +35,6 @@ export default function RegistrationScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -46,6 +44,7 @@ export default function RegistrationScreen() {
     console.log("login:", login);
     console.log("email:", email);
     console.log("password:", password);
+    console.log("image:", image);
     navigation.navigate("Home");
   };
 
