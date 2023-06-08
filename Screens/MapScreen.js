@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import getLocation from "../utils/getLocation";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 export default function MapScreen() {
@@ -9,32 +9,31 @@ export default function MapScreen() {
   useEffect(() => {
     (async () => {
       const coords = await getLocation();
-      // console.log('coords', coords)
       setLocation({ ...coords });
     })();
   }, [location]);
 
   return (
-      <MapView
-        style={styles.container}
-        region={{
-          latitude: location?.latitude,
-          longitude: location?.longitude,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.006,
+    <MapView
+      style={styles.container}
+      region={{
+        latitude: location?.latitude,
+        longitude: location?.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.006,
+      }}
+      mapType="standard"
+      minZoomLevel={15}
+    >
+      <Marker
+        title="I am here"
+        coordinate={{
+          latitude: location?.latitude || 0,
+          longitude: location?.longitude || 0,
         }}
-        mapType="standard"
-        minZoomLevel={15}
-      >
-        <Marker
-          title="I am here"
-          coordinate={{
-            latitude: location?.latitude || 0,
-            longitude: location?.longitude || 0,
-          }}
-          description="Hello"
-        />
-      </MapView>
+        description="Hello"
+      />
+    </MapView>
   );
 }
 
