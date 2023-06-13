@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -10,9 +13,9 @@ import {
   Keyboard,
   Image,
 } from "react-native";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { register } from "../Redux/Auth/auth-operations";
 import * as ImagePicker from "expo-image-picker";
+import uploadImage from "../utils/uploadImage";
 import bgImage from "../assets/bgImage.png";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FormInput from "../Components/FormInput";
@@ -24,8 +27,10 @@ export default function RegistrationScreen() {
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
   const [image, setImage] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -40,11 +45,19 @@ export default function RegistrationScreen() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("login:", login);
-    console.log("email:", email);
-    console.log("password:", password);
-    console.log("image:", image);
+  const handleSubmit = async() => {
+    const imageURL = await uploadImage(image);
+    const data = {
+      imageURL,
+      login,
+      email,
+      password,
+    };
+    dispatch(register(data));
+    setLogin("");
+    setEmail("");
+    setPassword("");
+    setImage("");
     navigation.navigate("Home");
   };
 
@@ -56,7 +69,7 @@ export default function RegistrationScreen() {
     <ImageBackground source={bgImage} style={styles.img}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-          <View style={styles.box}>
+          <View style={{ ...styles.box, paddingBottom: isFocused ? 10 : 78 }}>
             <View style={styles.wrapper}>
               {!image ? (
                 <TextInput style={styles.photoInput} editable={false} />
@@ -82,12 +95,16 @@ export default function RegistrationScreen() {
                   placeholder="Логін"
                   onChange={setLogin}
                   value={login}
+                  isFocused={isFocused}
+                  setIsFocused={setIsFocused}
                 />
                 <FormInput
                   style={styles.input}
                   placeholder="Адреса електронної пошти"
                   onChange={setEmail}
                   value={email}
+                  isFocused={isFocused}
+                  setIsFocused={setIsFocused}
                 />
                 <View>
                   <FormInput
@@ -96,6 +113,8 @@ export default function RegistrationScreen() {
                     onChange={setPassword}
                     value={password}
                     secureTextEntry={hidePassword}
+                    isFocused={isFocused}
+                    setIsFocused={setIsFocused}
                   />
                   <TouchableOpacity
                     style={styles.hideBtn}
@@ -135,7 +154,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     paddingTop: 92,
     paddingHorizontal: 16,
-    paddingBottom: 78,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },

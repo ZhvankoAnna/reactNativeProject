@@ -5,8 +5,6 @@ import ProfileScreen from "./ProfileScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-// import MapScreen from "./MapScreen";
-
 const Tabs = createBottomTabNavigator();
 
 export default function Home() {
@@ -49,23 +47,7 @@ export default function Home() {
         name="PostsScreen"
         component={PostsScreen}
         options={{
-          title: "Публікації",
-          headerTitleStyle: {
-            fontFamily: "rb-med",
-          },
-          headerTitleAlign: "center",
-          headerStyle: {
-            borderBottomWidth: 1,
-          },
-          headerRight: () => (
-            <Feather
-              name="log-out"
-              size={24}
-              color="#BDBDBD"
-              style={{ paddingRight: 10 }}
-              onPress={() => {}}
-            />
-          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -89,13 +71,6 @@ export default function Home() {
           headerShown: false,
         }}
       />
-      {/* <Tabs.Screen
-        name="MapScreen"
-        component={MapScreen}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
     </Tabs.Navigator>
   );
 }

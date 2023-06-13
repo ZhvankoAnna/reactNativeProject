@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 import {
   Text,
   View,
@@ -13,6 +14,9 @@ import {
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import getLocation from "../utils/getLocation";
+import uploadImage from "../utils/uploadImage";
+import {db} from '../config';
+import { collection, addDoc, getFirestore } from "firebase/firestore";
 import FormInput from "../Components/FormInput";
 import SubmitButton from "../Components/SubmitButton";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -23,11 +27,14 @@ export default function CreatePostsScreen() {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [place, setPlace] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [coords, setCoords] = useState({});
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   let disabled = true;
   const navigation = useNavigation();
+  const {userId} = useSelector((state) => state.user)
 
   if (image && title && place) {
     disabled = false;
@@ -39,6 +46,8 @@ export default function CreatePostsScreen() {
       await MediaLibrary.requestPermissionsAsync();
 
       setHasPermission(status === "granted");
+      const location = await getLocation();
+      setCoords(location);
     })();
   }, []);
 
@@ -53,11 +62,21 @@ export default function CreatePostsScreen() {
     if (disabled) {
       return;
     }
-    const coords = await getLocation();
-    console.log("coords", coords);
-    console.log("image", image);
-    console.log("title", title);
-    console.log("place", place);
+    const photoURL = await uploadImage(image);
+    const data = {
+      title,
+      photoURL,
+      location: place,
+      coords,
+      userId,
+    }
+    await addDoc(collection(db, 'posts'), {
+      title,
+      photoURL,
+      location: place,
+      coords,
+      userId,
+    })
     setImage("");
     setTitle("");
     setPlace("");
@@ -136,6 +155,8 @@ export default function CreatePostsScreen() {
             value={title}
             onChange={setTitle}
             auth={false}
+            isFocused={isFocused}
+            setIsFocused={setIsFocused}
           />
           <View style={styles.locationWrapper}>
             <FormInput
@@ -144,6 +165,8 @@ export default function CreatePostsScreen() {
               onChange={setPlace}
               auth={false}
               location={true}
+              isFocused={isFocused}
+              setIsFocused={setIsFocused}
             />
             <Feather
               name="map-pin"

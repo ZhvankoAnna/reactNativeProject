@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { login } from "../Redux/Auth/auth-operations";
 import bgImage from "../assets/bgImage.png";
 import FormInput from "../Components/FormInput";
 import SubmitButton from "../Components/SubmitButton";
@@ -18,18 +20,21 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    console.log("email:", email);
-    console.log("password:", password);
-    navigation.navigate("Home",
-    {
-      screen: "PostsScreen",
-      params: { email },
-    }
-    );
+    const data = {
+      email,
+      password,
+    };
+    dispatch(login(data));
+    navigation.navigate("Home");
+    setEmail('');
+    setPassword('');
+
   };
 
   const handleShowPassword = () => {
@@ -40,7 +45,7 @@ export default function LoginScreen() {
     <ImageBackground source={bgImage} style={styles.img}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-          <View style={styles.box}>
+          <View style={{...styles.box, paddingBottom: isFocused ? 10 : 144}}>
             <Text style={styles.title}>Увійти</Text>
             <View>
               <KeyboardAvoidingView
@@ -51,6 +56,8 @@ export default function LoginScreen() {
                   placeholder="Адреса електронної пошти"
                   onChange={setEmail}
                   value={email}
+                  isFocused={isFocused}
+                  setIsFocused={setIsFocused}
                 />
                 <View>
                   <FormInput
@@ -59,6 +66,8 @@ export default function LoginScreen() {
                     onChange={setPassword}
                     value={password}
                     secureTextEntry={hidePassword}
+                    isFocused={isFocused}
+                    setIsFocused={setIsFocused}
                   />
                   <TouchableOpacity
                     style={styles.hideBtn}
@@ -100,7 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingTop: 32,
     paddingHorizontal: 16,
-    paddingBottom: 144,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },

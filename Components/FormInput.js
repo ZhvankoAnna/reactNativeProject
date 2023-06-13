@@ -8,8 +8,9 @@ export default function FormInput({
   secureTextEntry = false,
   auth = true,
   location = false,
+  isFocused,
+  setIsFocused,
 }) {
-  const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
     setIsFocused(true);
