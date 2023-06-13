@@ -15,6 +15,6 @@ export const postsSlice = createSlice({
         addUsersPost: (state, {payload}) => ({
             ...state,
             posts: [...state.posts, payload]
-        })
+        }),
     }
 })

@@ -26,8 +26,8 @@ export default function DefaultPostsScreen() {
     dispatch(getPostsList());
   }, [dispatch, posts]);
 
-  const handleCommentsPress = (photoURL, comments) => {
-    navigation.navigate("CommentsScreen", { photoURL, comments });
+  const handleCommentsPress = (item) => {
+    navigation.navigate("CommentsScreen", { item });
   };
 
   const handlePlacePress = (coords) => {
@@ -56,7 +56,7 @@ export default function DefaultPostsScreen() {
             <Text style={styles.title}>{item.title}</Text>
             <View style={styles.itemWrapper}>
               <TouchableOpacity
-                onPress={() => handleCommentsPress(item.photoURL, item.comments)}
+                onPress={() => handleCommentsPress(item)}
               >
                 <View style={styles.itemBox}>
                   <Feather name="message-circle" size={24} color="#bdbdbd" />

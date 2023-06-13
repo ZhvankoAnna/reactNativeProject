@@ -1,24 +1,73 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { db } from "../config";
+import { doc, updateDoc } from "firebase/firestore";
 import {
   TextInput,
   View,
   Image,
   StyleSheet,
   TouchableOpacity,
-  Sc
+  FlatList,
+  Text,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function CommentsScreen({ route }) {
-  const { photoURL, comments } = route.params;
+  const [newComment, setNewComment] = useState("");
+  const { item } = route.params;
+  const { userId, userAvatar } = useSelector((state) => state.user);
+
+  const handleAddComment = async () => {
+    const date = new Date();
+    const createdAt = date.getTime();
+    try {
+      const postRef = await doc(db, "posts", item.postId);
+      await updateDoc(postRef, {
+        comments: [
+          ...item.comments,
+          {
+            comment: newComment,
+            userId,
+            userAvatar,
+            createdAt,
+          },
+        ],
+      });
+      setNewComment("");
+    } catch (error) {
+      console.log(error.code, error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View>
-        <Image source={{ uri: photoURL }} style={styles.postPhoto} />
+        <Image source={{ uri: item.photoURL }} style={styles.postPhoto} />
+        <FlatList
+          data={item.comments}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.commentWrapper}>
+              <Image
+                source={{ uri: item.userAvatar }}
+                style={styles.userAvatar}
+              />
+              <View style={styles.commentInner}>
+                <Text style={styles.comment}>{item.comment}</Text>
+              </View>
+            </View>
+          )}
+        />
       </View>
       <View>
-        <TextInput placeholder="Коментувати..." style={styles.input} />
-        <TouchableOpacity style={styles.iconWrapper}>
+        <TextInput
+          placeholder="Коментувати..."
+          value={newComment}
+          onChangeText={setNewComment}
+          style={styles.input}
+        />
+        <TouchableOpacity style={styles.iconWrapper} onPress={handleAddComment}>
           <AntDesign name="arrowup" size={24} color="#ffffff" />
         </TouchableOpacity>
       </View>
@@ -38,6 +87,28 @@ const styles = StyleSheet.create({
   postPhoto: {
     width: "100%",
     height: 240,
+    marginBottom: 34,
+  },
+  commentWrapper: {
+    flexDirection: "row",
+    gap: 16,
+    marginBottom: 24,
+  },
+  userAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 50,
+  },
+  commentInner: {
+    width: "86%",
+    padding: 16,
+    borderRadius: 6,
+    borderTopLeftRadius: 0,
+    backgroundColor: "#e8e8e8",
+  },
+  comment: {
+    fontFamily: "rb-reg",
+    fontSize: 13,
   },
   input: {
     minWidth: "100%",
