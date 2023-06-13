@@ -14,7 +14,7 @@ import {
   Image,
 } from "react-native";
 import { register } from "../Redux/Auth/auth-operations";
-import * as ImagePicker from "expo-image-picker";
+import pickImage from "../utils/pickImage";
 import uploadImage from "../utils/uploadImage";
 import bgImage from "../assets/bgImage.png";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -31,19 +31,6 @@ export default function RegistrationScreen() {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   const handleSubmit = async() => {
     const imageURL = await uploadImage(image);
@@ -76,7 +63,7 @@ export default function RegistrationScreen() {
               ) : (
                 <Image source={{ uri: image }} style={styles.photo} />
               )}
-              <TouchableOpacity onPress={pickImage} style={styles.icon}>
+              <TouchableOpacity onPress={() => pickImage(setImage)} style={styles.icon}>
                 <Ionicons
                   name="add-circle-outline"
                   size={25}

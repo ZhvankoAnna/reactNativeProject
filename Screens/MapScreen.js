@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
-import getLocation from "../utils/getLocation";
 import { StyleSheet, Dimensions } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-export default function MapScreen() {
-  const [location, setLocation] = useState({});
-
-  useEffect(() => {
-    (async () => {
-      const coords = await getLocation();
-      setLocation({ ...coords });
-    })();
-  }, [location]);
+export default function MapScreen({route}) {
+  const {latitude, longitude} = route.params;
 
   return (
     <MapView
       style={styles.container}
       region={{
-        latitude: location?.latitude,
-        longitude: location?.longitude,
+        latitude: latitude,
+        longitude: longitude,
         latitudeDelta: 0.001,
         longitudeDelta: 0.006,
       }}
@@ -28,8 +19,8 @@ export default function MapScreen() {
       <Marker
         title="I am here"
         coordinate={{
-          latitude: location?.latitude || 0,
-          longitude: location?.longitude || 0,
+          latitude: latitude,
+          longitude: longitude,
         }}
         description="Hello"
       />

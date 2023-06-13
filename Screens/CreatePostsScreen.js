@@ -76,6 +76,7 @@ export default function CreatePostsScreen() {
       location: place,
       coords,
       userId,
+      comments: [],
     })
     setImage("");
     setTitle("");

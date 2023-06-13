@@ -22,12 +22,12 @@ export default function DefaultPostsScreen() {
   const { posts } = useSelector((state) => state.posts);
 
   useEffect(() => {
-    dispatch(getCurrent())
+    dispatch(getCurrent());
     dispatch(getPostsList());
   }, [dispatch, posts]);
 
-  const handleCommentsPress = () => {
-    navigation.navigate("CommentsScreen");
+  const handleCommentsPress = (photoURL, comments) => {
+    navigation.navigate("CommentsScreen", { photoURL, comments });
   };
 
   const handlePlacePress = (coords) => {
@@ -51,20 +51,29 @@ export default function DefaultPostsScreen() {
         data={posts}
         keyExtractor={(item) => item.postId.toString()}
         renderItem={({ item }) => (
-          <View style={{ marginBottom: 34}}>
+          <View style={{ marginBottom: 34 }}>
             <Image source={{ uri: item.photoURL }} style={styles.postPhoto} />
             <Text style={styles.title}>{item.title}</Text>
             <View style={styles.itemWrapper}>
-              <TouchableOpacity onPress={handleCommentsPress}>
+              <TouchableOpacity
+                onPress={() => handleCommentsPress(item.photoURL, item.comments)}
+              >
                 <View style={styles.itemBox}>
                   <Feather name="message-circle" size={24} color="#bdbdbd" />
-                  <Text style={styles.itemText}>0</Text>
+                  <Text style={styles.itemText}>{item.comments.length}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handlePlacePress(item.coords)}>
                 <View style={styles.itemBox}>
                   <Feather name="map-pin" size={24} color="#bdbdbd" />
-                  <Text style={styles.itemText}>Place</Text>
+                  <Text
+                    style={{
+                      ...styles.itemText,
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    {item.location}
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
