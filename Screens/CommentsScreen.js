@@ -10,6 +10,10 @@ import {
   TouchableOpacity,
   FlatList,
   Text,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -19,8 +23,6 @@ export default function CommentsScreen({ route }) {
   const { userId, userAvatar } = useSelector((state) => state.user);
 
   const handleAddComment = async () => {
-    const date = new Date();
-    const createdAt = date.getTime();
     try {
       const postRef = await doc(db, "posts", item.postId);
       await updateDoc(postRef, {
@@ -30,7 +32,6 @@ export default function CommentsScreen({ route }) {
             comment: newComment,
             userId,
             userAvatar,
-            createdAt,
           },
         ],
       });
@@ -42,35 +43,44 @@ export default function CommentsScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Image source={{ uri: item.photoURL }} style={styles.postPhoto} />
-        <FlatList
-          data={item.comments}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.commentWrapper}>
-              <Image
-                source={{ uri: item.userAvatar }}
-                style={styles.userAvatar}
-              />
-              <View style={styles.commentInner}>
-                <Text style={styles.comment}>{item.comment}</Text>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-      <View>
-        <TextInput
-          placeholder="Коментувати..."
-          value={newComment}
-          onChangeText={setNewComment}
-          style={styles.input}
-        />
-        <TouchableOpacity style={styles.iconWrapper} onPress={handleAddComment}>
-          <AntDesign name="arrowup" size={24} color="#ffffff" />
-        </TouchableOpacity>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View>
+            <Image source={{ uri: item.photoURL }} style={styles.postPhoto} />
+            <FlatList
+              data={item.comments}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.commentWrapper}>
+                  <Image
+                    source={{ uri: item.userAvatar }}
+                    style={styles.userAvatar}
+                  />
+                  <View style={styles.commentInner}>
+                    <Text style={styles.comment}>{item.comment}</Text>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
+          <View>
+            <TextInput
+              placeholder="Коментувати..."
+              value={newComment}
+              onChangeText={setNewComment}
+              style={styles.input}
+            />
+            <TouchableOpacity
+              style={styles.iconWrapper}
+              onPress={handleAddComment}
+            >
+              <AntDesign name="arrowup" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </View>
   );
 }
