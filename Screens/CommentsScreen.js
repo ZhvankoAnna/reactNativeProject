@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { db } from "../config";
-import { doc, collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   TextInput,
   View,
@@ -26,9 +32,9 @@ export default function CommentsScreen({ route }) {
   useEffect(() => {
     const commentsList = getCommentsList();
     setComments(commentsList);
-  }, [])
+  }, []);
 
-  const getCommentsList = async() => {
+  const getCommentsList = async () => {
     const postRef = await doc(db, "posts", item.postId);
     const commentsRef = collection(postRef, "comments");
     const result = await getDocs(commentsRef);
@@ -39,7 +45,7 @@ export default function CommentsScreen({ route }) {
       });
     });
     setComments(comments);
-  }
+  };
 
   const handleAddComment = async () => {
     try {
@@ -59,7 +65,6 @@ export default function CommentsScreen({ route }) {
 
       const commentsList = getCommentsList();
       setComments(commentsList);
-
     } catch (error) {
       console.log(error.code, error.message);
     }
@@ -76,13 +81,26 @@ export default function CommentsScreen({ route }) {
             <FlatList
               data={comments}
               keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.commentWrapper}>
+              renderItem={({ item, index }) => (
+                <View
+                  style={
+                    index === 0 || index / 2 === 0
+                      ? styles.commentWrapper
+                      : styles.commentWrapperReverse
+                  }
+                >
                   <Image
                     source={{ uri: item.userAvatar }}
                     style={styles.userAvatar}
                   />
-                  <View style={styles.commentInner}>
+                  <View
+                    style={[
+                      styles.commentInner,
+                      index === 0 || index / 2 === 0
+                        ? styles.evenComment
+                        : styles.oddComment,
+                    ]}
+                  >
                     <Text style={styles.comment}>{item.comment}</Text>
                   </View>
                 </View>
@@ -128,6 +146,11 @@ const styles = StyleSheet.create({
     gap: 16,
     marginBottom: 24,
   },
+  commentWrapperReverse: {
+    flexDirection: "row-reverse",
+    gap: 16,
+    marginBottom: 24,
+  },
   userAvatar: {
     width: 28,
     height: 28,
@@ -136,9 +159,15 @@ const styles = StyleSheet.create({
   commentInner: {
     width: "86%",
     padding: 16,
+    backgroundColor: "#e8e8e8",
+  },
+  evenComment: {
     borderRadius: 6,
     borderTopLeftRadius: 0,
-    backgroundColor: "#e8e8e8",
+  },
+  oddComment: {
+    borderRadius: 6,
+    borderTopRightRadius: 0,
   },
   comment: {
     fontFamily: "rb-reg",
