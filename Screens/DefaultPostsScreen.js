@@ -60,7 +60,7 @@ export default function DefaultPostsScreen() {
               >
                 <View style={styles.itemBox}>
                   <Feather name="message-circle" size={24} color="#bdbdbd" />
-                  <Text style={styles.itemText}>{item.comments.length}</Text>
+                  <Text style={styles.itemText}>{item.comments ? item.comments.length : 0}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handlePlacePress(item.coords)}>

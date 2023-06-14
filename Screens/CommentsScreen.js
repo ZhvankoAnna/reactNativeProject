@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { db } from "../config";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
 import {
   TextInput,
   View,
@@ -19,23 +19,47 @@ import { AntDesign } from "@expo/vector-icons";
 
 export default function CommentsScreen({ route }) {
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([]);
   const { item } = route.params;
   const { userId, userAvatar } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const commentsList = getCommentsList();
+    setComments(commentsList);
+  }, [])
+
+  const getCommentsList = async() => {
+    const postRef = await doc(db, "posts", item.postId);
+    const commentsRef = collection(postRef, "comments");
+    const result = await getDocs(commentsRef);
+    const comments = [];
+    result.forEach((doc) => {
+      comments.push({
+        ...doc.data(),
+      });
+    });
+    setComments(comments);
+  }
 
   const handleAddComment = async () => {
     try {
       const postRef = await doc(db, "posts", item.postId);
-      await updateDoc(postRef, {
-        comments: [
-          ...item.comments,
-          {
-            comment: newComment,
-            userId,
-            userAvatar,
-          },
-        ],
+
+      const commentsRef = collection(postRef, "comments");
+
+      await addDoc(commentsRef, {
+        userId,
+        userAvatar,
+        comment: newComment,
+        createdAt: serverTimestamp(),
       });
+
+      Keyboard.dismiss();
       setNewComment("");
+
+      const commentsList = getCommentsList();
+      setComments(commentsList);
+
     } catch (error) {
       console.log(error.code, error.message);
     }
@@ -50,7 +74,7 @@ export default function CommentsScreen({ route }) {
           <View>
             <Image source={{ uri: item.photoURL }} style={styles.postPhoto} />
             <FlatList
-              data={item.comments}
+              data={comments}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={styles.commentWrapper}>

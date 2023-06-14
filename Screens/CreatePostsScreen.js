@@ -63,21 +63,15 @@ export default function CreatePostsScreen() {
       return;
     }
     const photoURL = await uploadImage(image);
-    const data = {
-      title,
-      photoURL,
-      location: place,
-      coords,
-      userId,
-    }
+
     await addDoc(collection(db, 'posts'), {
       title,
       photoURL,
       location: place,
       coords,
       userId,
-      comments: [],
     })
+
     setImage("");
     setTitle("");
     setPlace("");
